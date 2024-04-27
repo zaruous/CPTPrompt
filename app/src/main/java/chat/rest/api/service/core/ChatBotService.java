@@ -1,6 +1,6 @@
 package chat.rest.api.service.core;
 
-public interface ChatBotService extends ResponseHandler{
+public interface ChatBotService extends ResponseHandler {
 
 	/**
 	 * @param message

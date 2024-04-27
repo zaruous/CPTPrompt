@@ -15,17 +15,14 @@ import chat.rest.api.service.core.ChatBotService;
 import chat.rest.api.service.core.VelocitySupport;
 
 public class App2 {
-	public String getGreeting() {
-		return "Hello World!";
-	}
 
 	public static void main(String[] args) throws Exception {
 		ChatBotService newBotService = ChatBot.newBotService(API.GTP_3_5);
-
-		String message = VelocitySupport.toString(
-				new File("chat_script"), 
-				Map.of("script", "일본소녀가 서울 야경 도시에서 매운 떡볶이를 먹는 모습", 
-						"Language", "Korean"));
+		
+		String message = VelocitySupport.toString(new File("scripts/chat_gpt/midjourney/chat_script"),
+				Map.of("script", "일본소녀가 서울 야경 도시에서 매운 떡볶이를 먹는 모습", "language", "Korean"));
+		
+		
 		System.out.println("#################");
 		System.out.println(message);
 		System.out.println("#################");
@@ -35,14 +32,7 @@ public class App2 {
 		System.out.println("#################");
 		Gson gson = new Gson();
 		HashMap fromJson = gson.fromJson(send, HashMap.class);
-		System.out.println(((Map)((Map)((List)fromJson.get("choices")).get(0)).get("message")).get("content"));
-//		System.out.println(send.getContentType().getValue());
-//		if ("application/json".equals(send.getContentType().getValue())) {
-//			JsonElement reader = JsonParser.parseReader(new InputStreamReader(send.getContent()));
-//			System.out.println(reader.getAsString());
-//
-//		}
-//		String ret = newBotService.toString(send);
-//		System.out.println(ret);
+		System.out.println(((Map) ((Map) ((List) fromJson.get("choices")).get(0)).get("message")).get("content"));
+
 	}
 }

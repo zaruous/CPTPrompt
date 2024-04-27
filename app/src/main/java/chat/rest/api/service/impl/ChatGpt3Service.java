@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,14 +55,14 @@ public class ChatGpt3Service implements ChatBotService {
 		return chatBotConfig;
 	}
 
-	public Map<String,String> systemRole() {
+	public Map<String, String> systemRole() {
 		return Map.of("role", "system", "content", "Write English");
 	}
 
-	public Map<String,String> assistant() {
+	public Map<String, String> assistant() {
 		return Map.of("role", "assistant", "content", "");
 	}
-	
+
 	@Override
 	public void send(String message, ResponseHandler handler) throws Exception {
 		StringEntity entity = new StringEntity(message);
@@ -76,10 +77,7 @@ public class ChatGpt3Service implements ChatBotService {
 
 		var param = new HashMap<>();
 		param.put("model", this.config.getConfig().getProperty("model"));
-		param.put("messages",
-				List.of(
-						systemRole(),  
-						Map.of("role", "user", "content", message)));
+		param.put("messages", List.of(systemRole(), Map.of("role", "user", "content", message)));
 
 		// API 요청 생성
 		Gson gson = new Gson();
