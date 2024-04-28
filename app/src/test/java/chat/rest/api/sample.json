@@ -1,0 +1,11 @@
+{
+	"name" : "kim",
+	"address" : [
+		{
+			"name" : "addr1"
+		},
+		{
+			"name" : "addr2"
+		}
+	]
+}
