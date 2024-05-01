@@ -1,7 +1,7 @@
 /**
  * 
  */
-package chat.rest.api.service.core;
+package chat.rest.api;
 
 import java.util.List;
 

@@ -5,7 +5,6 @@ package chat.rest.api;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
@@ -15,7 +14,6 @@ import com.google.gson.Gson;
 
 import chat.rest.api.ChatBot.API;
 import chat.rest.api.service.core.ChatBotService;
-import chat.rest.api.service.core.ResponseModelDVO;
 import chat.rest.api.service.core.VelocitySupport;
 
 /**

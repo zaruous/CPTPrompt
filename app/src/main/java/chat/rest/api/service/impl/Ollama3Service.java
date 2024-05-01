@@ -3,14 +3,19 @@
  */
 package chat.rest.api.service.impl;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.http.HttpEntity;
@@ -19,7 +24,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
 
@@ -31,33 +35,23 @@ import chat.rest.api.service.core.VirtualPool;
 /**
  * 
  */
-public class ChatGpt3Service extends AbstractPromptService {
+public class Ollama3Service extends AbstractPromptService {
 
-	
-
-	public ChatGpt3Service() throws Exception {
+	public Ollama3Service() throws Exception {
 		super();
 	}
 
 	@Override
-	public ChatBotConfig createConfig() throws Exception {
+	public ChatBotConfig createConfig() throws IOException {
 		ChatBotConfig chatBotConfig = new ChatBotConfig();
 
 		Properties properties = new Properties();
-		try (InputStream in = new FileInputStream(new File("chat.gpt.properties"))) {
+		try (InputStream in = new FileInputStream(new File("ollama3.properties"))) {
 			properties.load(in);
 		}
 
 		chatBotConfig.setConfig(properties);
 		return chatBotConfig;
-	}
-
-	public Map<String, String> systemRole() {
-		return Map.of("role", "system", "content", "Write English");
-	}
-
-	public Map<String, String> assistant() {
-		return Map.of("role", "assistant", "content", "");
 	}
 
 	@Override
@@ -87,13 +81,26 @@ public class ChatGpt3Service extends AbstractPromptService {
 
 		// HttpClient를 사용하여 API 호출
 		HttpEntity responseEntity = null;
+
 		try (CloseableHttpClient httpClient = HttpClients.createDefault();
 				CloseableHttpResponse response = httpClient.execute(httpPost)) {
 			// API 응답 처리
 //			System.out.println(response.getStatusLine().getStatusCode());
 			Stream.of(response.getAllHeaders()).forEach(System.out::println);
 			responseEntity = response.getEntity();
-			return EntityUtils.toString(responseEntity, StandardCharsets.UTF_8);
+
+			String str;
+//			var sb = new StringBuilder();
+			try (BufferedReader r = new BufferedReader(new InputStreamReader(responseEntity.getContent()))) {
+				str = r.lines().map(ret -> {
+					Ollama3ResponseDVO D = gson.fromJson(ret, Ollama3ResponseDVO.class);
+					return D.getMessage().getContent();
+				}).collect(Collectors.joining());
+//				sb.append(r.readLine());
+			}
+			;
+			return str;
+//			return EntityUtils.toString(responseEntity, StandardCharsets.UTF_8);
 		}
 	}
 
@@ -125,6 +132,68 @@ public class ChatGpt3Service extends AbstractPromptService {
 
 			}
 		};
+	}
+
+	static class Ollama3ResponseDVO {
+		private String model;
+		private Date created_at;
+		private Message message;
+		private boolean done;
+
+		public class Message {
+			private String role;
+			private String content;
+
+			// Getters and Setters for Message fields
+			public String getRole() {
+				return role;
+			}
+
+			public void setRole(String role) {
+				this.role = role;
+			}
+
+			public String getContent() {
+				return content;
+			}
+
+			public void setContent(String content) {
+				this.content = content;
+			}
+		}
+
+		// Getters and Setters for Sample fields
+		public String getModel() {
+			return model;
+		}
+
+		public void setModel(String model) {
+			this.model = model;
+		}
+
+		public Date getCreated_at() {
+			return created_at;
+		}
+
+		public void setCreated_at(Date created_at) {
+			this.created_at = created_at;
+		}
+
+		public Message getMessage() {
+			return message;
+		}
+
+		public void setMessage(Message message) {
+			this.message = message;
+		}
+
+		public boolean isDone() {
+			return done;
+		}
+
+		public void setDone(boolean done) {
+			this.done = done;
+		}
 	}
 
 }

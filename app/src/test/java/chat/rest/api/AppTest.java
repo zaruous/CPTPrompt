@@ -17,11 +17,15 @@ import chat.rest.api.service.core.ChatBotService;
 import chat.rest.api.service.core.VelocitySupport;
 
 public class AppTest {
+	/**
+	 * chat gpt 모델 응답 테스트
+	 * @throws Exception
+	 */
 	@Test
-	public void testApp() throws Exception {
+	public void testChatGpt3() throws Exception {
 		ChatBotService newBotService = ChatBot.newBotService(API.GTP_3_5);
 
-		//chatgpt template binding
+		// chatgpt template binding
 		String message = VelocitySupport.toString(new File("scripts/chat_gpt/midjourney/chat_script"),
 				Map.of("script", "일본소녀가 서울 야경 도시에서 매운 떡볶이를 먹는 모습", "language", "Korean"));
 
@@ -35,6 +39,30 @@ public class AppTest {
 		Gson gson = new Gson();
 		HashMap fromJson = gson.fromJson(send, HashMap.class);
 		System.out.println(((Map) ((Map) ((List) fromJson.get("choices")).get(0)).get("message")).get("content"));
+	}
 
+	/**
+	 * ollama3 데이터 응답 테스트
+	 * @throws Exception
+	 */
+	@Test
+	public void testOllama3() throws Exception {
+		ChatBotService newBotService = ChatBot.newBotService(API.OLLAMA_3);
+
+		// chatgpt template binding
+		String message = VelocitySupport.toString(new File("scripts/chat_gpt/midjourney/chat_script"),
+				Map.of("script", "일본소녀가 서울 야경 도시에서 매운 떡볶이를 먹는 모습", "language", "Korean"));
+
+		System.out.println("#################");
+		System.out.println(message);
+		System.out.println("#################");
+		String send = newBotService.send(message);
+		System.out.println("########\tResult\t#########");
+		System.out.println(send);
+		System.out.println("#################");
+
+//		Gson gson = new Gson();
+//		HashMap fromJson = gson.fromJson(send, HashMap.class);
+//		System.out.println(((Map) ((Map) ((List) fromJson.get("choices")).get(0)).get("message")).get("content"));
 	}
 }
