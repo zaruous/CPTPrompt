@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.junit.Test;
 
@@ -19,6 +20,7 @@ import chat.rest.api.service.core.VelocitySupport;
 public class AppTest {
 	/**
 	 * chat gpt 모델 응답 테스트
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -43,6 +45,7 @@ public class AppTest {
 
 	/**
 	 * ollama3 데이터 응답 테스트
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -61,8 +64,49 @@ public class AppTest {
 		System.out.println(send);
 		System.out.println("#################");
 
-//		Gson gson = new Gson();
+	}
+
+	/**
+	 * ollama 모델 동시 연결 테스트
+	 */
+	@Test
+	public void ollama3_병렬테스트() {
+		Stream.iterate(0, a -> a + 1).limit(50).parallel().forEach(idx -> {
+			System.out.printf("%d send test \n", idx);
+			try {
+				testOllama3();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+	}
+	
+	/**
+	 * ollama 모델 동시 연결 테스트
+	 * @throws Exception 
+	 */
+	@Test
+	public void java_code_generate_test() throws Exception {
+		ChatBotService newBotService = ChatBot.newBotService(API.GTP_3_5);
+
+		// chatgpt template binding
+		String message = VelocitySupport.toString(new File("scripts/chat_gpt/code_gen/java_code_generate"),
+				Map.of("code", "현재 시간을 기준으로 일주일 뒤의 시간을 출력 ", "language", "Korean"));
+
+		System.out.println("#################");
+		System.out.println(message);
+		System.out.println("#################");
+		String send = newBotService.send(message);
+		System.out.println("########\tResult\t#########");
+//		System.out.println(send);
+		System.out.println("#################");
+		
+		Gson gson = new Gson();
 //		HashMap fromJson = gson.fromJson(send, HashMap.class);
 //		System.out.println(((Map) ((Map) ((List) fromJson.get("choices")).get(0)).get("message")).get("content"));
+		ResponseModelDVO fromJson = gson.fromJson(send, ResponseModelDVO.class);
+		fromJson.getChoices().forEach(d ->{
+			System.out.println(d.getMessage().getContent());
+		});
 	}
 }
