@@ -3,6 +3,8 @@
 .settings
 .project
 
+
 # Ignore Gradle build output directory
 build
 app/bin/**
+app/*.properties
