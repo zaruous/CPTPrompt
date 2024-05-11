@@ -109,4 +109,52 @@ public class AppTest {
 			System.out.println(d.getMessage().getContent());
 		});
 	}
+	
+	@Test
+	public void java_code_generate_image_test() throws Exception {
+		ChatBotService newBotService = ChatBot.newBotService(API.OLLAMA_3);
+
+		// chatgpt template binding
+		String message = "You are an artist who draws pictures.\r\n"
+				+ "\r\n"
+				+ "Draw a dog realistically.\r\n"
+				+ "\r\n"
+				+ "The result is in base64 format.\r\n"
+				+ "\r\n"
+				+ "Additionally, please generate Java code that can save the base64 format result as an image file.";
+
+		System.out.println("#################");
+		System.out.println(message);
+		System.out.println("#################");
+		String send = newBotService.send(message);
+		System.out.println("########\tResult\t#########");
+		System.out.println(send);
+		System.out.println("#################");
+		
+//		Gson gson = new Gson();
+//		HashMap fromJson = gson.fromJson(send, HashMap.class);
+//		System.out.println(((Map) ((Map) ((List) fromJson.get("choices")).get(0)).get("message")).get("content"));
+//		ResponseModelDVO fromJson = gson.fromJson(send, ResponseModelDVO.class);
+//		fromJson.getChoices().forEach(d ->{
+//			System.out.println(d.getMessage().getContent());
+//		});
+	}
+	
+	
+	@Test
+	public void testReka() throws Exception {
+		ChatBotService newBotService = ChatBot.newBotService(API.REKA);
+
+		// chatgpt template binding
+		String message = VelocitySupport.toString(new File("scripts/chat_gpt/midjourney/chat_script"),
+				Map.of("script", "일본소녀가 서울 야경 도시에서 매운 떡볶이를 먹는 모습", "language", "English"));
+
+		System.out.println("#################");
+		System.out.println(message);
+		System.out.println("#################");
+		String send = newBotService.send(message);
+		System.out.println("#################");
+		System.out.println(send);
+		System.out.println("#################");
+	}
 }

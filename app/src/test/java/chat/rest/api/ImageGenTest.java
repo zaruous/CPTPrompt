@@ -35,6 +35,11 @@ public class ImageGenTest {
 		Gson gson = new Gson();
 		HashMap fromJson = gson.fromJson(send, HashMap.class);
 		System.out.println(((Map) ((Map) ((List) fromJson.get("choices")).get(0)).get("message")).get("content"));
+		ResponseModelDVO ret = gson.fromJson(send, ResponseModelDVO.class);
+		ret.getChoices().forEach(d ->{
+			System.out.println(d.getFinish_reason());
+			System.out.println(d.getMessage().getContent());
+		});
 
 	}
 }
