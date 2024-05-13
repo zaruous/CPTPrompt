@@ -6,13 +6,27 @@ import java.util.Map;
 public abstract class AbstractPromptService implements ChatBotService {
 
 	private ChatBotConfig config;
+	private Rules rule = Rules.newInstance();
 
 	public AbstractPromptService() throws Exception {
 		this.config = createConfig();
 	}
 
+	public AbstractPromptService(Rules rule) throws Exception {
+		this();
+		this.rule = rule;
+	}
+
 	public ChatBotConfig getConfig() {
 		return config;
+	}
+
+	public Rules getRule() {
+		return rule;
+	}
+
+	public void setRule(Rules rule) {
+		this.rule = rule;
 	}
 
 	/**
@@ -21,12 +35,17 @@ public abstract class AbstractPromptService implements ChatBotService {
 	 */
 	public abstract ChatBotConfig createConfig() throws Exception;
 
-	public Map<String, String> systemRole() {
-		return Map.of("role", "system", "content", "Write English");
+
+	public Map<String, String> getSystemRule() {
+		return this.rule.getSystemRole();
+	}
+	
+	public void setSystemRole(Map<String, String> systemRole) {
+		this.rule.setSystemRole(systemRole);
 	}
 
 	public Map<String, String> assistant() {
-		return Map.of("role", "assistant", "content", "");
+		return  this.rule.getAssistant();
 	}
 
 }

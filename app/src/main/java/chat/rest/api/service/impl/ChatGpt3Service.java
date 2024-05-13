@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 import chat.rest.api.service.core.AbstractPromptService;
 import chat.rest.api.service.core.ChatBotConfig;
 import chat.rest.api.service.core.ResponseHandler;
+import chat.rest.api.service.core.Rules;
 import chat.rest.api.service.core.VirtualPool;
 
 /**
@@ -33,10 +34,12 @@ import chat.rest.api.service.core.VirtualPool;
  */
 public class ChatGpt3Service extends AbstractPromptService {
 
-	
-
 	public ChatGpt3Service() throws Exception {
 		super();
+	}
+
+	public ChatGpt3Service(Rules rules) throws Exception {
+		super(rules);
 	}
 
 	@Override
@@ -50,14 +53,6 @@ public class ChatGpt3Service extends AbstractPromptService {
 
 		chatBotConfig.setConfig(properties);
 		return chatBotConfig;
-	}
-
-	public Map<String, String> systemRole() {
-		return Map.of("role", "system", "content", "Write English");
-	}
-
-	public Map<String, String> assistant() {
-		return Map.of("role", "assistant", "content", "");
 	}
 
 	@Override
@@ -74,7 +69,7 @@ public class ChatGpt3Service extends AbstractPromptService {
 
 		var param = new HashMap<>();
 		param.put("model", getConfig().getModel());
-		param.put("messages", List.of(systemRole(), Map.of("role", "user", "content", message)));
+		param.put("messages", List.of(getSystemRule(), Map.of("role", "user", "content", message)));
 
 		// API 요청 생성
 		Gson gson = new Gson();
@@ -96,6 +91,8 @@ public class ChatGpt3Service extends AbstractPromptService {
 			return EntityUtils.toString(responseEntity, StandardCharsets.UTF_8);
 		}
 	}
+
+	
 
 	private Runnable runAsync(ResponseHandler handler, HttpPost httpPost) {
 		return new Runnable() {

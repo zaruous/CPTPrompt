@@ -11,26 +11,68 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Map;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+
 import org.junit.Test;
 
 /**
  * 
  */
 public class PyOpenVoiceCallTest {
-	
+
 	@Test
 	public void test() throws Exception {
 		String openVoiceHome = "C:\\Users\\KYJ\\git\\OpenVoice";
 		// 파이썬 스크립트 경로 설정
 		String pythonScriptPath = "java_create_tts_hello.py";
 		String outFileName = "create_voice.wav";
-		exe(openVoiceHome, pythonScriptPath, outFileName, "alloy",   "만나서 반갑습니다. 김영준입니다.");
+		exe(openVoiceHome, pythonScriptPath, outFileName, "alloy", "만나서 반갑습니다. 김영준입니다.");
 
-		File file = new File(openVoiceHome, "demo_result\\"+outFileName);
-		if (file.exists()) {
-			Desktop.getDesktop().open(file);
-		} else {
-			System.out.println("not Support");
+		File file = new File(openVoiceHome, "demo_result\\" + outFileName);
+//		if (file.exists()) {
+//			Desktop.getDesktop().open(file);
+//		} else {
+//			System.out.println("not Support");
+//		}
+		
+		playMP3(file);
+	}
+
+	/**
+	 * @param filePath
+	 */
+	public static void playMP3(File audioFile) {
+//		File file = new File(filePath);
+		try {
+			AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+			AudioFormat format = audioStream.getFormat();
+			DataLine.Info info = new DataLine.Info(Clip.class, format);
+			Clip audioClip = (Clip) AudioSystem.getLine(info);
+			audioClip.open(audioStream);
+			audioClip.start();
+
+			// Wait for the audio to finish playing
+			Thread.sleep(audioClip.getMicrosecondLength() / 1000);
+
+			// Close the audio clip
+			audioClip.close();
+		} catch (UnsupportedAudioFileException ex) {
+			System.out.println("The specified audio file is not supported.");
+			ex.printStackTrace();
+		} catch (LineUnavailableException ex) {
+			System.out.println("Audio line for playing back is unavailable.");
+			ex.printStackTrace();
+		} catch (IOException ex) {
+			System.out.println("Error playing the audio file.");
+			ex.printStackTrace();
+		} catch (InterruptedException ex) {
+			ex.printStackTrace();
 		}
 	}
 

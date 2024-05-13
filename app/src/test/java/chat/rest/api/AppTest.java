@@ -29,7 +29,7 @@ public class AppTest {
 
 		// chatgpt template binding
 		String message = VelocitySupport.toString(new File("scripts/chat_gpt/midjourney/chat_script"),
-				Map.of("script", "일본소녀가 서울 야경 도시에서 매운 떡볶이를 먹는 모습", "language", "Korean"));
+				Map.of("script", "긴 생머리의 20세 여자. 서울 동대문 시장에서 매운 떡볶이를 먹고 매워하는 모습", "language", "English"));
 
 		System.out.println("#################");
 		System.out.println(message);
@@ -109,6 +109,9 @@ public class AppTest {
 			System.out.println(d.getMessage().getContent());
 		});
 	}
+	
+	
+	
 	
 	@Test
 	public void java_code_generate_image_test() throws Exception {
