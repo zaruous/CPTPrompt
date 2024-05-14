@@ -8,6 +8,7 @@ import java.io.IOException;
 import chat.rest.api.service.core.ChatBotService;
 import chat.rest.api.service.core.Rules;
 import chat.rest.api.service.impl.ChatGpt3Service;
+import chat.rest.api.service.impl.ChatGpt4oService;
 import chat.rest.api.service.impl.Ollama3Service;
 import chat.rest.api.service.impl.RekaService;
 
@@ -17,7 +18,7 @@ import chat.rest.api.service.impl.RekaService;
 public class ChatBot {
 
 	public enum API {
-		GTP_3_5, OLLAMA_3, REKA
+		GTP_3_5, GTP_4_o, OLLAMA_3, REKA
 	}
 
 	/**
@@ -38,6 +39,9 @@ public class ChatBot {
 		switch (api) {
 		case GTP_3_5:
 			chatGpt3Service = new ChatGpt3Service(rules);
+			break;
+		case GTP_4_o:
+			chatGpt3Service = new ChatGpt4oService(rules);
 			break;
 		case OLLAMA_3:
 			chatGpt3Service = new Ollama3Service();

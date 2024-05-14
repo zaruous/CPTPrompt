@@ -42,6 +42,26 @@ public class AppTest {
 		HashMap fromJson = gson.fromJson(send, HashMap.class);
 		System.out.println(((Map) ((Map) ((List) fromJson.get("choices")).get(0)).get("message")).get("content"));
 	}
+	
+	@Test
+	public void testChatGpt4o() throws Exception {
+		ChatBotService newBotService = ChatBot.newBotService(API.GTP_4_o);
+
+		// chatgpt template binding
+		String message = VelocitySupport.toString(new File("scripts/chat_gpt/midjourney/chat_script"),
+				Map.of("script", "긴 생머리의 20세 여자. 서울 동대문 시장에서 매운 떡볶이를 먹고 매워하는 모습", "language", "English"));
+
+		System.out.println("#################");
+		System.out.println(message);
+		System.out.println("#################");
+		String send = newBotService.send(message);
+		System.out.println("#################");
+		System.out.println(send);
+		System.out.println("#################");
+		Gson gson = new Gson();
+		HashMap fromJson = gson.fromJson(send, HashMap.class);
+		System.out.println(((Map) ((Map) ((List) fromJson.get("choices")).get(0)).get("message")).get("content"));
+	}
 
 	/**
 	 * ollama3 데이터 응답 테스트
