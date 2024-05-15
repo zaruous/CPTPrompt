@@ -7,10 +7,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.http.HttpEntity;
@@ -23,8 +25,9 @@ import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
 
-import chat.rest.api.service.core.AbstractPromptService;
+import chat.rest.api.service.core.AbstractGTPMessage;
 import chat.rest.api.service.core.ChatBotConfig;
+import chat.rest.api.service.core.GTPRequest;
 import chat.rest.api.service.core.ResponseHandler;
 import chat.rest.api.service.core.Rules;
 import chat.rest.api.service.core.VirtualPool;
@@ -65,6 +68,45 @@ public class ChatGpt4oService extends ChatGpt3Service {
 		VirtualPool.newInstance().execute(runAsync(handler, httpPost));
 	}
 
+	public String send(GTPRequest request) throws Exception {
+		var param = new HashMap<>();
+		param.put("model", request.getModel());
+
+		List<AbstractGTPMessage> list = request.getList();
+
+		List<Map<String, Object>> userContents = list.stream().filter(m -> "user".equals(m.getRole()))
+				.map(m -> m.getRequestFormat()).collect(Collectors.toList());
+
+		Map<String, Object> c = Map.of("role", "user", "content", userContents);
+		List<Object> asList = Arrays.asList(c);
+		if (null != request.getSystemMessage())
+			asList = Arrays.asList(c, request.getSystemMessage());
+		param.put("messages", asList);
+
+		// API 요청 생성
+		Gson gson = new Gson();
+		String requestJson = gson.toJson(param);
+
+//		Files.writeString(Path.of("json.log"), requestJson);
+
+		StringEntity entity = new StringEntity(requestJson, StandardCharsets.UTF_8);
+		HttpPost httpPost = new HttpPost(getConfig().getRootUrl());
+		httpPost.setHeader("Content-Type", "application/json");
+		httpPost.setHeader("Authorization", "Bearer " + getConfig().getConfig().getProperty("apikey"));
+		httpPost.setEntity(entity);
+
+		// HttpClient를 사용하여 API 호출
+		HttpEntity responseEntity = null;
+		try (CloseableHttpClient httpClient = HttpClients.createDefault();
+				CloseableHttpResponse response = httpClient.execute(httpPost)) {
+			// API 응답 처리
+			System.out.println(response.getStatusLine().getStatusCode());
+			Stream.of(response.getAllHeaders()).forEach(System.out::println);
+			responseEntity = response.getEntity();
+			return EntityUtils.toString(responseEntity, StandardCharsets.UTF_8);
+		}
+	}
+
 	public String send(String message) throws Exception {
 
 		var param = new HashMap<>();
@@ -91,8 +133,6 @@ public class ChatGpt4oService extends ChatGpt3Service {
 			return EntityUtils.toString(responseEntity, StandardCharsets.UTF_8);
 		}
 	}
-
-	
 
 	private Runnable runAsync(ResponseHandler handler, HttpPost httpPost) {
 		return new Runnable() {

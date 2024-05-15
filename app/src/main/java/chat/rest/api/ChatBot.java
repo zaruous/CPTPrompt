@@ -29,6 +29,7 @@ public class ChatBot {
 	public static ChatBotService newBotService(API api) throws Exception {
 		return newBotService(api, Rules.newInstance());
 	}
+
 	/**
 	 * @param api
 	 * @return
@@ -45,8 +46,10 @@ public class ChatBot {
 			break;
 		case OLLAMA_3:
 			chatGpt3Service = new Ollama3Service();
+			break;
 		case REKA:
 			chatGpt3Service = new RekaService();
+			break;
 		}
 		return chatGpt3Service;
 	}

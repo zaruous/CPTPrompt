@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.stream.Stream;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -86,13 +85,11 @@ public class ChatGpt3Service extends AbstractPromptService {
 				CloseableHttpResponse response = httpClient.execute(httpPost)) {
 			// API 응답 처리
 //			System.out.println(response.getStatusLine().getStatusCode());
-			Stream.of(response.getAllHeaders()).forEach(System.out::println);
+//			Stream.of(response.getAllHeaders()).forEach(System.out::println);
 			responseEntity = response.getEntity();
 			return EntityUtils.toString(responseEntity, StandardCharsets.UTF_8);
 		}
 	}
-
-	
 
 	private Runnable runAsync(ResponseHandler handler, HttpPost httpPost) {
 		return new Runnable() {

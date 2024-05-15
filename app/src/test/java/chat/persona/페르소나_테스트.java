@@ -19,7 +19,7 @@ public class 페르소나_테스트 {
 
 	@Test
 	public void test() throws Exception {
-		ChatBotService newBotService = ChatBot.newBotService(API.GTP_3_5, Rules.newInstance().assistantRuleContent(
+		ChatBotService newBotService = ChatBot.newBotService(API.GTP_4_o, Rules.newInstance().assistantRuleContent(
 				"주어진 입력에 대해 다음과 같은 일련의 처리를 순차적으로 수행해주세요.\r\n" + "\n다음 과정으로 진행하기 전에 작업을 멈추고 피드백을 요청해주세요."));
 
 		// chatgpt template binding

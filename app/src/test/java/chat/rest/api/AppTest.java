@@ -25,7 +25,7 @@ public class AppTest {
 	 */
 	@Test
 	public void testChatGpt3() throws Exception {
-		ChatBotService newBotService = ChatBot.newBotService(API.GTP_3_5);
+		ChatBotService newBotService = ChatBot.newBotService(API.OLLAMA_3);
 
 		// chatgpt template binding
 		String message = VelocitySupport.toString(new File("scripts/chat_gpt/midjourney/chat_script"),
@@ -38,9 +38,9 @@ public class AppTest {
 		System.out.println("#################");
 		System.out.println(send);
 		System.out.println("#################");
-		Gson gson = new Gson();
-		HashMap fromJson = gson.fromJson(send, HashMap.class);
-		System.out.println(((Map) ((Map) ((List) fromJson.get("choices")).get(0)).get("message")).get("content"));
+//		Gson gson = new Gson();
+//		HashMap fromJson = gson.fromJson(send, HashMap.class);
+//		System.out.println(((Map) ((Map) ((List) fromJson.get("choices")).get(0)).get("message")).get("content"));
 	}
 	
 	@Test

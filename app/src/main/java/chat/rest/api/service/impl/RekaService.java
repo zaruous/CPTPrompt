@@ -83,7 +83,7 @@ public class RekaService extends AbstractPromptService {
 			String string = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
 			System.out.println(string);
 			HashMap fromJson = gson.fromJson(string, HashMap.class);
-			accessToekn = fromJson.getOrDefault("accessToken", null).toString();
+			accessToekn = (String) fromJson.get("accessToken");
 			if (accessToekn == null) {
 				throw new RuntimeException("token is invalid");
 			}
