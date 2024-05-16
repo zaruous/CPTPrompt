@@ -5,6 +5,8 @@ package chat.rest.api;
 
 import java.util.List;
 
+import com.google.gson.Gson;
+
 /**
  * 
  */
@@ -162,5 +164,14 @@ public class ResponseModelDVO {
 		public void setTotal_tokens(int total_tokens) {
 			this.total_tokens = total_tokens;
 		}
+	}
+	
+	/**
+	 * @param message
+	 * @return
+	 */
+	public static ResponseModelDVO fromGtpResultMessage(String message) {
+		Gson gson = new Gson();
+		return gson.fromJson(message, ResponseModelDVO.class);
 	}
 }

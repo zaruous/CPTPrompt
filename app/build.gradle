@@ -32,6 +32,10 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.8'
     implementation 'commons-io:commons-io:2.8.0'
     implementation 'org.apache.velocity:velocity:1.7'
+    
+   
+
+</dependency>
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

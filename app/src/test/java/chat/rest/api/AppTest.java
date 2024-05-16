@@ -25,7 +25,7 @@ public class AppTest {
 	 */
 	@Test
 	public void testChatGpt3() throws Exception {
-		ChatBotService newBotService = ChatBot.newBotService(API.OLLAMA_3);
+		ChatBotService newBotService = ChatBot.newBotService(API.GTP_3_5);
 
 		// chatgpt template binding
 		String message = VelocitySupport.toString(new File("scripts/chat_gpt/midjourney/chat_script"),

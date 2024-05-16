@@ -8,8 +8,6 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-import chat.rest.api.ChatBot.API;
-import chat.rest.api.service.core.ChatBotService;
 import chat.rest.api.service.core.GTPRequest;
 import chat.rest.api.service.core.ImageGTPMessage;
 import chat.rest.api.service.core.TextGTPMessage;
@@ -29,6 +27,7 @@ public class ImageRequestTest {
 		TextGTPMessage textGTPMessage = new TextGTPMessage("이미지에 대한 설명");
 
 		GTPRequest request = GTPRequest.gpt4oModel();
+//		request.setResponseFormat(GTPRequest.RESPONSE_FORMAT_JSON);
 		request.setSystemMessage("그림을 설명합니다.");
 		request.setList(Arrays.asList(textGTPMessage, imageGTPMessage));
 
