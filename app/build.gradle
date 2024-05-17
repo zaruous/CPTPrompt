@@ -35,7 +35,7 @@ dependencies {
     
    
 
-</dependency>
+
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

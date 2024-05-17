@@ -32,4 +32,11 @@ public class TextGTPMessage extends AbstractGTPMessage {
 		return Map.of("type", super.getType(), "text", super.getContent());
 	}
 
+	/**
+	 * @param content
+	 * @return
+	 */
+	public static TextGTPMessage of(String content) {
+		return new TextGTPMessage(content);
+	}
 }

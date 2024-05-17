@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ import chat.rest.api.service.core.ChatBotConfig;
 import chat.rest.api.service.core.GTPRequest;
 import chat.rest.api.service.core.ResponseHandler;
 import chat.rest.api.service.core.Rules;
+import chat.rest.api.service.core.TextGTPMessage;
 import chat.rest.api.service.core.VirtualPool;
 
 /**
@@ -73,16 +75,29 @@ public class ChatGpt4oService extends ChatGpt3Service {
 		param.put("model", request.getModel());
 
 		List<AbstractGTPMessage> list = request.getList();
-
-		List<Map<String, Object>> userContents = list.stream().filter(m -> "user".equals(m.getRole()))
-				.map(m -> m.getRequestFormat()).collect(Collectors.toList());
+		List<Map<String, Object>> userContents =  Collections.emptyList();
+		if(list ==null)
+		{
+			throw new RuntimeException("message of list is empty.");
+		}
+		else
+		{
+			userContents = list.stream().filter(m -> "user".equals(m.getRole()))
+					.map(m -> m.getRequestFormat()).collect(Collectors.toList());		
+		}
+		
 
 		Map<String, Object> c = Map.of("role", "user", "content", userContents);
-		List<Object> asList = Arrays.asList(c);
+		Map<String, String> d = getSystemRule();
+		
+		List<Object> asList = Arrays.asList(c, d);
 		if (null != request.getSystemMessage())
 			asList = Arrays.asList(c, request.getSystemMessage());
 		param.put("messages", asList);
 
+		if(request.getResponseFormat()!=null && !request.getResponseFormat().isEmpty())
+			param.put("response_format", Map.of("type" , request.getResponseFormat()));
+		
 		// API 요청 생성
 		Gson gson = new Gson();
 		String requestJson = gson.toJson(param);

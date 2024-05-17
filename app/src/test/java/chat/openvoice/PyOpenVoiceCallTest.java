@@ -23,6 +23,7 @@ import org.junit.Test;
 /**
  * 
  */
+@Deprecated
 public class PyOpenVoiceCallTest {
 
 	@Test
