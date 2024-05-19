@@ -8,7 +8,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
 
-public class VirtualPool extends Thread {
+public final class VirtualPool extends Thread {
+
 	private static VirtualPool pool;
 	ThreadFactory factory = Thread.ofVirtual().factory();
 	ExecutorService newVirtualThreadPerTaskExecutor;

@@ -2,15 +2,13 @@ package chat.rest.api.service.core;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.nio.file.Files;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
@@ -23,10 +21,7 @@ public class VelocitySupport {
 	 * @throws IOException
 	 */
 	public static String toString(File script, Map<String, Object> param) throws FileNotFoundException, IOException {
-		String sc = "";
-		try (Reader r = new FileReader(script)) {
-			sc = IOUtils.toString(r);
-		}
+		String sc = Files.readString(script.toPath());
 		return toString(sc, param);
 	}
 

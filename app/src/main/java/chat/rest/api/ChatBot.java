@@ -15,10 +15,13 @@ import chat.rest.api.service.impl.RekaService;
 /**
  * 
  */
-public class ChatBot {
+public final class ChatBot {
 
+	private  ChatBot() {
+		
+	}
 	public enum API {
-		GTP_3_5, GTP_4_o, OLLAMA_3, REKA
+		GTP_3_5, GTP_4_O, OLLAMA_3, REKA
 	}
 
 	/**
@@ -41,7 +44,7 @@ public class ChatBot {
 		case GTP_3_5:
 			chatGpt3Service = new ChatGpt3Service(rules);
 			break;
-		case GTP_4_o:
+		case GTP_4_O:
 			chatGpt3Service = new ChatGpt4oService(rules);
 			break;
 		case OLLAMA_3:
