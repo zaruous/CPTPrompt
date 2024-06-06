@@ -8,8 +8,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import org.junit.Test;
 
@@ -18,7 +16,6 @@ import chat.rest.api.ResponseModelDVO.Message;
 import chat.rest.api.service.core.GTPRequest;
 import chat.rest.api.service.core.TTSGTPRequest;
 import chat.rest.api.service.core.TextGTPMessage;
-import chat.rest.api.service.core.VirtualPool;
 
 /**
  * 
@@ -29,9 +26,9 @@ public class TextToSpeechGptServiceTest {
 	public void textToSpeechTest() throws Exception {
 		String message;
 		message = """
-				안녕하세요 김영준입니다. 만나서 반갑습니다.!
+				HI MSDSDSDSDSDSASD
 				""";
-		createTTS(message);
+		createTTS("20240605", message);
 	}
 
 	/**
@@ -39,13 +36,13 @@ public class TextToSpeechGptServiceTest {
 	 * @return
 	 * @throws Exception
 	 */
-	private File createTTS(String message) throws Exception {
+	private File createTTS(String outputSimpleName, String message) throws Exception {
 		TextToSpeechGptService arenaService = new TextToSpeechGptService();
 
 		TTSGTPRequest tts = TTSGTPRequest.ttsModel();
 		tts.setMessage(new TextGTPMessage(message));
 		byte[] send = arenaService.send(tts);
-		String outFileName = "test." + tts.getResponseFormat();
+		String outFileName = outputSimpleName + "." + tts.getResponseFormat();
 		try (FileOutputStream fileOutputStream = new FileOutputStream(outFileName)) {
 			fileOutputStream.write(send);
 			fileOutputStream.flush();
@@ -82,7 +79,7 @@ public class TextToSpeechGptServiceTest {
 
 		File tts;
 		try {
-			tts = createTTS(content);
+			tts = createTTS("textToSpeechTest2",content);
 			Desktop desktop = Desktop.getDesktop();
 			desktop.open(tts);
 		} catch (Exception e) {

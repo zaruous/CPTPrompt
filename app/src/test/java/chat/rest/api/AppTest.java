@@ -25,7 +25,7 @@ public class AppTest {
 	 */
 	@Test
 	public void testChatGpt3() throws Exception {
-		ChatBotService newBotService = ChatBot.newBotService(API.GTP_4_o);
+		ChatBotService newBotService = ChatBot.newBotService(API.OLLAMA_3);
 
 		// chatgpt template binding
 		String message = VelocitySupport.toString(new File("scripts/chat_gpt/midjourney/chat_script"),
@@ -45,7 +45,7 @@ public class AppTest {
 	
 	@Test
 	public void testChatGpt4o() throws Exception {
-		ChatBotService newBotService = ChatBot.newBotService(API.GTP_4_o);
+		ChatBotService newBotService = ChatBot.newBotService(API.GTP_4_O);
 
 		// chatgpt template binding
 		String message = VelocitySupport.toString(new File("scripts/chat_gpt/midjourney/chat_script"),

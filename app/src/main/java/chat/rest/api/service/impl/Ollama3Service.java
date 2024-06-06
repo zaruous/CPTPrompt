@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -79,28 +80,30 @@ public class Ollama3Service extends AbstractPromptService {
 		httpPost.setHeader("Authorization", "Bearer " + getConfig().getConfig().getProperty("apikey"));
 		httpPost.setEntity(entity);
 
+		
+		
 		// HttpClient를 사용하여 API 호출
 		HttpEntity responseEntity = null;
 
-		try (CloseableHttpClient httpClient = HttpClients.createDefault();
-				CloseableHttpResponse response = httpClient.execute(httpPost)) {
-			// API 응답 처리
-//			System.out.println(response.getStatusLine().getStatusCode());
-			Stream.of(response.getAllHeaders()).forEach(System.out::println);
-			responseEntity = response.getEntity();
+		try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+			try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
+//				System.out.println("!!");
+				// API 응답 처리
+				// System.out.println(response.getStatusLine().getStatusCode());
+				Stream.of(response.getAllHeaders()).forEach(System.out::println);
+				responseEntity = response.getEntity();
 
-			String str;
-//			var sb = new StringBuilder();
-			try (BufferedReader r = new BufferedReader(new InputStreamReader(responseEntity.getContent()))) {
-				str = r.lines().map(ret -> {
-					Ollama3ResponseDVO D = gson.fromJson(ret, Ollama3ResponseDVO.class);
-					return D.getMessage().getContent();
-				}).collect(Collectors.joining());
-//				sb.append(r.readLine());
+				String str;
+				// var sb = new StringBuilder();
+				try (BufferedReader r = new BufferedReader(new InputStreamReader(responseEntity.getContent()))) {
+					str = r.lines().map(ret -> {
+						Ollama3ResponseDVO D = gson.fromJson(ret, Ollama3ResponseDVO.class);
+						return D.getMessage().getContent();
+					}).collect(Collectors.joining());
+					// sb.append(r.readLine());
+				}
+				return str;
 			}
-			;
-			return str;
-//			return EntityUtils.toString(responseEntity, StandardCharsets.UTF_8);
 		}
 	}
 

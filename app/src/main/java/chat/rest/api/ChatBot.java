@@ -11,6 +11,7 @@ import chat.rest.api.service.impl.ChatGpt3Service;
 import chat.rest.api.service.impl.ChatGpt4oService;
 import chat.rest.api.service.impl.Ollama3Service;
 import chat.rest.api.service.impl.RekaService;
+import chat.rest.api.service.impl.SpeechToTextGptService;
 
 /**
  * 
@@ -21,7 +22,7 @@ public final class ChatBot {
 		
 	}
 	public enum API {
-		GTP_3_5, GTP_4_O, OLLAMA_3, REKA
+		GTP_3_5, GTP_4_O, OLLAMA_3, REKA, GTP_SPEECH_TO_TEST
 	}
 
 	/**
@@ -52,6 +53,9 @@ public final class ChatBot {
 			break;
 		case REKA:
 			chatGpt3Service = new RekaService();
+			break;
+		case GTP_SPEECH_TO_TEST: 
+			chatGpt3Service= new SpeechToTextGptService();
 			break;
 		}
 		return chatGpt3Service;
