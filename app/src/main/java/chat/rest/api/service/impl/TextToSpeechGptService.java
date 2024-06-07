@@ -7,12 +7,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.http.HttpEntity;
@@ -66,8 +62,6 @@ public class TextToSpeechGptService extends ChatGpt3Service {
 		// API 요청 생성
 		Gson gson = new Gson();
 		String requestJson = gson.toJson(param);
-System.out.println(requestJson);
-//		Files.writeString(Path.of("json.log"), requestJson);
 
 		StringEntity entity = new StringEntity(requestJson, StandardCharsets.UTF_8);
 		HttpPost httpPost = new HttpPost(getConfig().getRootUrl());
@@ -86,6 +80,52 @@ System.out.println(requestJson);
 			responseEntity = response.getEntity();
 			return EntityUtils.toByteArray(responseEntity);
 		}
+	}
+	
+	/**
+	 * @param message
+	 * @return
+	 * @throws Exception
+	 */
+	public byte[] getData(String message) throws Exception {
+		var param = new HashMap<>();
+		param.put("model", getConfig().getModel());
+
+		param.put("input", message);
+		param.put("response_format", getConfig().getConfig().getProperty("response_format"));
+		param.put("speed", getConfig().getConfig().getProperty("speed"));
+		param.put("voice", getConfig().getConfig().getProperty("voice"));
+		// API 요청 생성
+		Gson gson = new Gson();
+		String requestJson = gson.toJson(param);
+
+		StringEntity entity = new StringEntity(requestJson, StandardCharsets.UTF_8);
+		HttpPost httpPost = new HttpPost(getConfig().getRootUrl());
+		httpPost.setHeader("Content-Type", "application/json");
+		httpPost.setHeader("Accept-Type", "'application/octet-stream'");
+		httpPost.setHeader("Authorization", "Bearer " + getConfig().getConfig().getProperty("apikey"));
+		httpPost.setEntity(entity);
+
+		// HttpClient를 사용하여 API 호출
+		HttpEntity responseEntity = null;
+		try (CloseableHttpClient httpClient = HttpClients.createDefault();
+				CloseableHttpResponse response = httpClient.execute(httpPost)) {
+			// API 응답 처리
+			System.out.println(response.getStatusLine().getStatusCode());
+			Stream.of(response.getAllHeaders()).forEach(System.out::println);
+			responseEntity = response.getEntity();
+			return EntityUtils.toByteArray(responseEntity);
+		}
+	}
+
+	
+	/**
+	 * 사용 x
+	 */
+	@Deprecated
+	@Override
+	public String send(String message) throws Exception {
+		return super.send(message);
 	}
 
 }
